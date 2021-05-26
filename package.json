@@ -2,9 +2,6 @@
   "name": "greenhouse-automation",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
-    "dev": "cross-env NODE_ENV=development vue-cli-service serve --open --host localhost"
-  },
   "dependencies": {
     "@amcharts/amcharts4": "^4.9.33",
     "amcharts3": "github:amcharts/amcharts3",
