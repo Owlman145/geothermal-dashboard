@@ -45,8 +45,7 @@ export default {
           return {
             name: row.id,
             date: new Date(row.date),
-            indoor: parseFloat(row.indoor_humidity),
-            outdoor: parseFloat(row.outdoor_humidity)
+            input: parseFloat(row.input_humidity)
           }
         })
       } else {
@@ -54,12 +53,9 @@ export default {
           return {
             name: row.id,
             date: new Date(row.id),
-            indoor_max: parseFloat(row.indoor_humidity_max),
-            indoor: parseFloat(row.indoor_humidity_mean),
-            indoor_min: parseFloat(row.indoor_humidity_min),
-            outdoor_max: parseFloat(row.outdoor_humidity_max),
-            outdoor: parseFloat(row.outdoor_humidity_mean),
-            outdoor_min: parseFloat(row.outdoor_humidity_min),
+            input_max: parseFloat(row.input_humidity_max),
+            input: parseFloat(row.input_humidity_mean),
+            input_min: parseFloat(row.input_humidity_min),
           }
         })
       }
@@ -76,32 +72,23 @@ export default {
 
       let series1 = chart.series.push(new am4charts.LineSeries());
       series1.dataFields.dateX = "date";
-      series1.dataFields.valueY = "indoor";
+      series1.dataFields.valueY = "input";
       series1.tensionX = tension;
       series1.stroke = chart.colors.getIndex(1);
 
-      let series2 = chart.series.push(new am4charts.LineSeries());
-      series2.dataFields.dateX = "date";
-      series2.dataFields.valueY = "outdoor";
-      series2.tensionX = tension;
-      series2.stroke = chart.colors.getIndex(5);
-
 
       if (this.scale === 'daily') {
-        series1.tooltipText = "Indoor Humidity: {valueY.value}";
-        series2.tooltipText = "Outdoor Humidity: {valueY.value}";
-        series1.name = "Indoor Humidity";
-        series2.name = "Outdoor Humidity";
+        series1.tooltipText = " Humidity: {valueY.value}";
+        series1.name = "Humidity";
       } else {
-        series1.name = "Indoor Humidity (mean)";
-        series2.name = "Outdoor Humidity (mean)";
+        series1.name = "Humidity (mean)";
 
         let series3 = chart.series.push(new am4charts.LineSeries());
-        series3.name = "Indoor Humidity (max)";
+        series3.name = "Humidity (max)";
         series3.dataFields.dateX = "date";
-        series3.dataFields.valueY = "indoor_max";
-        series3.dataFields.openValueY = "indoor_min";
-        series3.dataFields.meanValueY = "indoor";
+        series3.dataFields.valueY = "input_max";
+        series3.dataFields.openValueY = "input_min";
+        series3.dataFields.meanValueY = "input";
         series3.tooltipText = "mean: {meanValueY.value} min: {openValueY.value} max:{valueY.value}";
         series3.sequencedInterpolation = true;
         series3.fillOpacity = 0.3;
@@ -110,8 +97,8 @@ export default {
         series3.stroke = chart.colors.getIndex(2);
         series3.adapter.add("tooltipText", function() {
           let text = "[bold]{date}[/]\n"
-          let indoorSeries = [chart.series.getIndex(2), chart.series.getIndex(0), chart.series.getIndex(3)]
-          indoorSeries.forEach(function(item) {
+          let inputSeries = [chart.series.getIndex(2), chart.series.getIndex(0), chart.series.getIndex(3)]
+          inputSeries.forEach(function(item) {
             if (item.name)
               text += "[" + item.stroke.hex + "]●[/] " + item.name + ": {" + item.dataFields.valueY + "}\n";
           })
@@ -119,45 +106,13 @@ export default {
         });
 
         let series4 = chart.series.push(new am4charts.LineSeries());
-        series4.name = "Indoor Humidity (min)";
+        series4.name = "Input Humidity (min)";
         series4.dataFields.dateX = "date";
-        series4.dataFields.valueY = "indoor_min";
+        series4.dataFields.valueY = "input_min";
         series4.sequencedInterpolation = true;
         series4.defaultState.transitionDuration = 1500;
         series4.stroke = chart.colors.getIndex(0);
         series4.tensionX = tension;
-
-
-
-        let series5 = chart.series.push(new am4charts.LineSeries());
-        series5.name = "Outdoor Humidity (max)";
-        series5.dataFields.dateX = "date";
-        series5.dataFields.valueY = "outdoor_max";
-        series5.dataFields.openValueY = "outdoor_min";
-        series5.dataFields.meanValueY = "outdoor";
-        series5.tooltipText = "mean: {meanValueY.value} min: {openValueY.value} max:{valueY.value}";
-        series5.sequencedInterpolation = true;
-        series5.fillOpacity = 0.3;
-        series5.defaultState.transitionDuration = 1000;
-        series5.tensionX = tension;
-        series5.adapter.add("tooltipText", function() {
-          let text = "[bold]{date}[/]\n"
-          let outdoorSeries = [chart.series.getIndex(4), chart.series.getIndex(1), chart.series.getIndex(5)]
-          outdoorSeries.forEach(function(item) {
-            if (item.name)
-              text += "[" + item.stroke.hex + "]●[/] " + item.name + ": {" + item.dataFields.valueY + "}\n";
-          })
-          return text;
-        });
-
-        let series6 = chart.series.push(new am4charts.LineSeries());
-        series6.name = "Outdoor Humidity (min)";
-        series6.dataFields.dateX = "date";
-        series6.dataFields.valueY = "outdoor_min";
-        series6.sequencedInterpolation = true;
-        series6.defaultState.transitionDuration = 1500;
-        series6.stroke = chart.colors.getIndex(6);
-        series6.tensionX = tension;
       }
 
       if (this.scale !== "monthly") {
@@ -168,7 +123,6 @@ export default {
 
       let scrollbarX = new am4charts.XYChartScrollbar();
       scrollbarX.series.push(series1);
-      scrollbarX.series.push(series2);
       chart.scrollbarX = scrollbarX;
 
       this.chart = chart;

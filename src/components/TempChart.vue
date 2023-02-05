@@ -47,8 +47,8 @@ export default {
           return {
             name: row.id,
             date: new Date(row.date),
-            indoor: parseFloat(row.indoor_temperature),
-            outdoor: parseFloat(row.outdoor_temperature)
+            input: parseFloat(row.input_temperature),
+            output: parseFloat(row.output_temperature)
           }
         })
       } else {
@@ -56,12 +56,12 @@ export default {
           return {
             name: row.id,
             date: new Date(row.id),
-            indoor_max: parseFloat(row.indoor_temperature_max),
-            indoor: parseFloat(row.indoor_temperature_mean),
-            indoor_min: parseFloat(row.indoor_temperature_min),
-            outdoor_max: parseFloat(row.outdoor_temperature_max),
-            outdoor: parseFloat(row.outdoor_temperature_mean),
-            outdoor_min: parseFloat(row.outdoor_temperature_min)
+            input_max: parseFloat(row.input_temperature_max),
+            input: parseFloat(row.input_temperature_mean),
+            input_min: parseFloat(row.input_temperature_min),
+            output_max: parseFloat(row.output_temperature_max),
+            output: parseFloat(row.output_temperature_mean),
+            output_min: parseFloat(row.output_temperature_min)
           }
         })
       }
@@ -78,32 +78,32 @@ export default {
 
       let series1 = chart.series.push(new am4charts.LineSeries());
       series1.dataFields.dateX = "date";
-      series1.dataFields.valueY = "indoor";
+      series1.dataFields.valueY = "input";
       series1.tensionX = tension;
       series1.stroke = chart.colors.getIndex(1);
 
       let series2 = chart.series.push(new am4charts.LineSeries());
       series2.dataFields.dateX = "date";
-      series2.dataFields.valueY = "outdoor";
+      series2.dataFields.valueY = "output";
       series2.tensionX = tension;
       series2.stroke = chart.colors.getIndex(5);
 
 
       if (this.scale === 'daily') {
-        series1.tooltipText = "Indoor Temp: {valueY.value}";
-        series2.tooltipText = "Outdoor Temp: {valueY.value}";
-        series1.name = "Indoor Temperature";
-        series2.name = "Outdoor Temperature";
+        series1.tooltipText = "Input Temp: {valueY.value}";
+        series2.tooltipText = "Output Temp: {valueY.value}";
+        series1.name = "Input Temperature";
+        series2.name = "Output Temperature";
       } else {
-        series1.name = "Indoor Temperature (mean)";
-        series2.name = "Outdoor Temperature (mean)";
+        series1.name = "Input Temperature (mean)";
+        series2.name = "Output Temperature (mean)";
 
         let series3 = chart.series.push(new am4charts.LineSeries());
-        series3.name = "Indoor Temperature (max)";
+        series3.name = "Input Temperature (max)";
         series3.dataFields.dateX = "date";
-        series3.dataFields.valueY = "indoor_max";
-        series3.dataFields.openValueY = "indoor_min";
-        series3.dataFields.meanValueY = "indoor";
+        series3.dataFields.valueY = "input_max";
+        series3.dataFields.openValueY = "input_min";
+        series3.dataFields.meanValueY = "input";
         series3.tooltipText = "mean: {meanValueY.value} min: {openValueY.value} max:{valueY.value}";
         series3.sequencedInterpolation = true;
         series3.fillOpacity = 0.3;
@@ -112,8 +112,8 @@ export default {
         series3.stroke = chart.colors.getIndex(2);
         series3.adapter.add("tooltipText", function() {
           let text = "[bold]{date}[/]\n"
-          let indoorSeries = [chart.series.getIndex(2), chart.series.getIndex(0), chart.series.getIndex(3)]
-          indoorSeries.forEach(function(item) {
+          let inputSeries = [chart.series.getIndex(2), chart.series.getIndex(0), chart.series.getIndex(3)]
+          inputSeries.forEach(function(item) {
             if (item.name)
               text += "[" + item.stroke.hex + "]●[/] " + item.name + ": {" + item.dataFields.valueY + "}\n";
           })
@@ -121,9 +121,9 @@ export default {
         });
 
         let series4 = chart.series.push(new am4charts.LineSeries());
-        series4.name = "Indoor Temperature (min)";
+        series4.name = "Input Temperature (min)";
         series4.dataFields.dateX = "date";
-        series4.dataFields.valueY = "indoor_min";
+        series4.dataFields.valueY = "input_min";
         series4.sequencedInterpolation = true;
         series4.defaultState.transitionDuration = 10;
         series4.stroke = chart.colors.getIndex(0);
@@ -132,11 +132,11 @@ export default {
 
 
         let series5 = chart.series.push(new am4charts.LineSeries());
-        series5.name = "Outdoor Temperature (max)";
+        series5.name = "Output Temperature (max)";
         series5.dataFields.dateX = "date";
-        series5.dataFields.valueY = "outdoor_max";
-        series5.dataFields.openValueY = "outdoor_min";
-        series5.dataFields.meanValueY = "outdoor";
+        series5.dataFields.valueY = "output_max";
+        series5.dataFields.openValueY = "output_min";
+        series5.dataFields.meanValueY = "output";
         series5.tooltipText = "mean: {meanValueY.value} min: {openValueY.value} max:{valueY.value}";
         series5.sequencedInterpolation = true;
         series5.fillOpacity = 0.3;
@@ -144,8 +144,8 @@ export default {
         series5.tensionX = tension;
         series5.adapter.add("tooltipText", function() {
           let text = "[bold]{date}[/]\n"
-          let outdoorSeries = [chart.series.getIndex(4), chart.series.getIndex(1), chart.series.getIndex(5)]
-          outdoorSeries.forEach(function(item) {
+          let outputSeries = [chart.series.getIndex(4), chart.series.getIndex(1), chart.series.getIndex(5)]
+          outputSeries.forEach(function(item) {
             if (item.name)
               text += "[" + item.stroke.hex + "]●[/] " + item.name + ": {" + item.dataFields.valueY + "}\n";
           })
@@ -153,9 +153,9 @@ export default {
         });
 
         let series6 = chart.series.push(new am4charts.LineSeries());
-        series6.name = "Outdoor Temperature (min)";
+        series6.name = "Output Temperature (min)";
         series6.dataFields.dateX = "date";
-        series6.dataFields.valueY = "outdoor_min";
+        series6.dataFields.valueY = "output_min";
         series6.sequencedInterpolation = true;
         series6.defaultState.transitionDuration = 10;
         series6.stroke = chart.colors.getIndex(6);

@@ -30,7 +30,7 @@
     </div>
     <h3 v-if="temperatureData" class="chart-title">Temperature</h3>
     <TempChart v-if="temperatureData" :data="temperatureData" :scale="scale"/>
-    <h3 v-if="waterTempData" class="chart-title">Water Temperature</h3>
+    <h3 v-if="waterTempData" class="chart-title">Hot Water Reservoir Temperature</h3>
     <WaterTempChart v-if="waterTempData" :data="waterTempData" :scale="scale"/>
     <h3 v-if="humidityData" class="chart-title">Humidity</h3>
     <HumidityChart v-if="humidityData" :data="humidityData" :scale="scale"/>
@@ -68,10 +68,10 @@ export default {
       fanConfigError: null,
       scale: 'daily',
       scales: {
-        daily: "Daily",
-        weekly: "Weekly",
-        monthly: "Monthly",
-        yearly: "Yearly"
+        daily: "48h",
+        weekly: "7 Days",
+        monthly: "30 Days",
+        yearly: "12 Months"
       },
       disabledDates: (date) => {console.log(date); return date > new Date()},
       startDate: null,
@@ -92,14 +92,14 @@ export default {
         return {
           id: point._id,
           date: new Date(point.timestamp),
-          indoor_temperature: point.input_temperature,
-          outdoor_temperature: point.output_temperature,
-          indoor_temperature_mean: point.avg_input_temperature,
-          outdoor_temperature_mean: point.avg_output_temperature,
-          indoor_temperature_max: point.max_input_temperature,
-          outdoor_temperature_max: point.max_output_temperature,
-          indoor_temperature_min: point.min_input_temperature,
-          outdoor_temperature_min: point.min_output_temperature
+          input_temperature: point.input_temperature,
+          output_temperature: point.output_temperature,
+          input_temperature_mean: point.avg_input_temperature,
+          output_temperature_mean: point.avg_output_temperature,
+          input_temperature_max: point.max_input_temperature,
+          output_temperature_max: point.max_output_temperature,
+          input_temperature_min: point.min_input_temperature,
+          output_temperature_min: point.min_output_temperature
         }
       })
     },
@@ -124,10 +124,10 @@ export default {
         return {
           id: point._id,
           date: new Date(point.timestamp),
-          indoor_humidity: point.humidity,
-          indoor_humidity_mean: point.avg_humidity,
-          indoor_humidity_max: point.max_indoor_humidity,
-          indoor_humidity_min: point.min_indoor_humidity,
+          input_humidity: point.humidity,
+          input_humidity_mean: point.avg_humidity,
+          input_humidity_max: point.max_input_humidity,
+          input_humidity_min: point.min_input_humidity,
         }
       })
     }
