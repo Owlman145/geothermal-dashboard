@@ -18,9 +18,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$purple: #5c4084;
+$purple: #b39ae5;
 .btn {
   height: 30px;
+  border-width: 1px;
+  border-radius: 0;
+  -webkit-appearance: none;
+  -webkit-border-radius: 0;
+
+  &:first-of-type {
+    border-radius: 5px 0 0 5px;
+  }
+  &:last-of-type {
+    border-radius: 0 5px 5px 0;
+  }
 }
 .btn.btn-primary {
   background-color: $purple;

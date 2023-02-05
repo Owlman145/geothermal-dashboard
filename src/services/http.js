@@ -28,5 +28,20 @@ export default {
       }
     })
     return data
-  }
+  },
+
+  async getFanConfig() {
+    const { data } = await axios.get(`${this.apiRoot}/controls/getFanTemps`)
+    return data
+  },
+
+  async getFanStatus() {
+    const { data } = await axios.get(`${this.apiRoot}/fanStatus`)
+    return data
+  },
+
+  async setFanConfig(onTemp, offTemp, override) {
+    const { data } = await axios.get(`${this.apiRoot}/controls/setFanTemps?onTemp=${onTemp}&offTemp=${offTemp}&override=${override}`)
+    return data
+  },
 }

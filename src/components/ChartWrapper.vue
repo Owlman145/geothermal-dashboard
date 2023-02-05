@@ -1,7 +1,22 @@
 <template>
   <div class='chart-wrapper'>
+    <div class="controls">
+
+    </div>
     <div class='fan-controls'>
-      <img src="../assets/fan-icon.png">
+      <div class='fan-temps'>
+        Fan Off: <input v-model.number="offTemp" type="number">
+        Fan On: <input v-model.number="onTemp" type="number">
+        <button class='set-fan-temp' @click="onFanTempSet">Set</button>
+      </div>
+      <button v-bind:class="{ 'fan-on':fanActive }" @click="onFanToggle">
+        <img  v-if="fanOn" src="../assets/fan-on-icon.png">
+        <img  v-else src="../assets/fan-off-icon.png">
+        <span v-if="fanOverride" class="override-text">MANUAL</span>
+      </button>
+      <div v-if="fanError" class="error">
+        {{ fanError }}
+      </div>
     </div>
     <vue-toggle :values="scales" :selected="scale" @change="onScaleChange" default="green"></vue-toggle>
     <div class="time-select-form">
@@ -42,9 +57,15 @@ export default {
   },
   data () {
     return {
+      onTemp: 0,
+      offTemp: 0,
       loading: false,
+      fanActive: false,
+      fanConfig: null,
       data: null,
       error: null,
+      fanError: null,
+      fanConfigError: null,
       scale: 'daily',
       scales: {
         daily: "Daily",
@@ -55,6 +76,12 @@ export default {
     }
   },
   computed: {
+    fanOverride: function() {
+      return this.fanConfig?.override
+    },
+    fanOn: function() {
+      return this.fanActive || this.fanConfig?.override
+    },
     temperatureData: function () {
       if (this.loading || !this.data)
         return null
@@ -111,6 +138,8 @@ export default {
     // already being observed
     this.loading = true
     this.fetchData()
+    this.fetchFanStatus()
+    this.fetchFanConfig()
   },
 
   beforeDestroy() {
@@ -136,6 +165,45 @@ export default {
         this.loading = false
       }
     },
+    async fetchFanStatus () {
+      this.fanError = null
+      // replace `getPost` with your data fetching util / API wrapper
+      try {
+        let fanStatus = await http.getFanStatus()
+        this.fanStatus = fanStatus
+        this.fanActive = fanStatus.status
+      } catch(err) {
+        this.fanError = err.toString()
+      }
+    },
+    async fetchFanConfig () {
+      this.fanConfigError = null
+      // replace `getPost` with your data fetching util / API wrapper
+      try {
+        let fanConfig = await http.getFanConfig()
+        this.fanConfig = fanConfig
+        this.onTemp = fanConfig.on_temp
+        this.offTemp = fanConfig.off_temp
+      } catch(err) {
+        this.fanConfigError = err.toString()
+      }
+    },
+    async setFanConfig (onTemp, offTemp, override) {
+        this.fanConfigError = null
+        // replace `getPost` with your data fetching util / API wrapper
+        let config = this.fanConfig
+        if (config) {
+          try {
+            let fanConfig = await http.setFanConfig(onTemp != null ? onTemp : config.on_temp,
+               offTemp != null ? offTemp : config.off_temp, override != null ? override : config.override)
+            this.fanConfig = fanConfig
+            this.onTemp = fanConfig.on_temp
+            this.offTemp = fanConfig.off_temp
+          } catch(err) {
+            this.fanConfigError = err.toString()
+          }
+        }
+    },
     onScaleChange(scale) {
       this.scale = scale
       this.loading = true
@@ -143,18 +211,74 @@ export default {
     },
     onTimeChange() {
       this.loading = true
+
       this.fetchData()
+    },
+    onFanToggle() {
+      if (this.fanConfig) {
+        this.setFanConfig(null, null, !this.fanConfig.override)
+      }
+    },
+    onFanTempSet() {
+      if (this.fanConfig) {
+        this.setFanConfig(this.onTemp, this.offTemp, null)
+      }
     }
   }
 }
 </script>
-
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+$purple: #b39ae5;
+$fan-color: #00a8f3;
 .fan-controls {
-  img {
-    width: 20px;
-    height: 20px;
+  display: flex;
+
+  .fan-temps {
+    margin-left: auto;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    button {
+      height: 30px;
+      background-color: $purple;
+
+      &:hover,
+      &:active {
+
+        background-color: darken($purple, 10%);
+        border-color: darken($purple, 10%);
+      }
+    }
+
+    input {
+      width: 30px;
+      height: 20px;
+      margin-right: 10px;
+    }
+  }
+  button {
+    border-radius: 10px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      width: 30px;
+      height: 30px;
+    }
+    &.fan-on {
+      background: white;
+      border-color: $fan-color;
+    }
+    span.override-text {
+      position: absolute;
+      top: 32px;
+      font-size: 8px;
+      font-weight: bold;
+    }
   }
 }
 h3 {
