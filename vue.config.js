@@ -3,7 +3,7 @@ module.exports = {
     config.devtool('source-map')
       .plugin('html')
       .tap(args => {
-        args[0].title = "Greenhouse App";
+        args[0].title = "Geothermal Dashboard";
         return args;
       })
   },

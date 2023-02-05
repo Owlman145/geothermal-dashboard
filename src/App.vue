@@ -8,7 +8,7 @@
 import ChartWrapper from './components/ChartWrapper.vue'
 
 export default {
-  name: 'App',
+  name: 'Geothermal Dashboard',
   components: {
     ChartWrapper
   }

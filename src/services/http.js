@@ -3,45 +3,53 @@ import axios from 'axios'
 export default {
   apiRoot: '/api/v1',
 
-  async getDaily(date) {
+  async getData(start, end) {
+    const { data } = await axios.get(`${this.apiRoot}/resources/data`, {
+      params: {
+        start,
+        end
+      }
+    })
+    return data
+  },
+
+  async getHourlyAvg(start, end) {
+    const { data } = await axios.get(`${this.apiRoot}/resources/hourlyData`, {
+      params: {
+        start,
+        end
+      }
+    })
+    return data
+  },
+
+  async getDailyAvg(start, end) {
     const { data } = await axios.get(`${this.apiRoot}/resources/dailyData`, {
       params: {
-        date
+        start,
+        end
       }
     })
     return data
   },
 
-  async getWeekly(date) {
+  async getWeeklyAvg(start, end) {
     const { data } = await axios.get(`${this.apiRoot}/resources/weeklyData`, {
       params: {
-        date
+        start,
+        end
       }
     })
     return data
   },
 
-  async getMonthly(date) {
+  async getMonthlyAvg(start, end) {
     const { data } = await axios.get(`${this.apiRoot}/resources/monthlyData`, {
       params: {
-        date
+        start,
+        end
       }
     })
     return data
-  },
-
-  async getFanConfig() {
-    const { data } = await axios.get(`${this.apiRoot}/controls/getFanTemps`)
-    return data
-  },
-
-  async getFanStatus() {
-    const { data } = await axios.get(`${this.apiRoot}/fanStatus`)
-    return data
-  },
-
-  async setFanConfig(onTemp, offTemp, override) {
-    const { data } = await axios.get(`${this.apiRoot}/controls/setFanTemps?onTemp=${onTemp}&offTemp=${offTemp}&override=${override}`)
-    return data
-  },
+  }
 }

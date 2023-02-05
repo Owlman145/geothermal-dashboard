@@ -1,6 +1,6 @@
 {
-  "name": "greenhouse-automation",
-  "version": "0.1.0",
+  "name": "geothermal-dashboard",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -9,7 +9,7 @@
     "dev": "cross-env NODE_ENV=development vue-cli-service serve --open --host localhost"
   },
   "dependencies": {
-    "@amcharts/amcharts4": "^4.9.33",
+    "@amcharts/amcharts4": "^4.10.33",
     "amcharts3": "github:amcharts/amcharts3",
     "axios": "^0.19.2",
     "core-js": "^3.6.5",

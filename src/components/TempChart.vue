@@ -5,9 +5,9 @@
 <script>
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
-import am4themes_animated from "@amcharts/amcharts4/themes/animated";
+//import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 
-am4core.useTheme(am4themes_animated);
+//am4core.useTheme(am4themes_animated);
 
 
 export default {
@@ -46,7 +46,7 @@ export default {
         chart.data = data.map(row => {
           return {
             name: row.id,
-            date: new Date(row.id),
+            date: new Date(row.date),
             indoor: parseFloat(row.indoor_temperature),
             outdoor: parseFloat(row.outdoor_temperature)
           }
@@ -107,7 +107,7 @@ export default {
         series3.tooltipText = "mean: {meanValueY.value} min: {openValueY.value} max:{valueY.value}";
         series3.sequencedInterpolation = true;
         series3.fillOpacity = 0.3;
-        series3.defaultState.transitionDuration = 1000;
+        series3.defaultState.transitionDuration = 10;
         series3.tensionX = tension;
         series3.stroke = chart.colors.getIndex(2);
         series3.adapter.add("tooltipText", function() {
@@ -125,7 +125,7 @@ export default {
         series4.dataFields.dateX = "date";
         series4.dataFields.valueY = "indoor_min";
         series4.sequencedInterpolation = true;
-        series4.defaultState.transitionDuration = 1500;
+        series4.defaultState.transitionDuration = 10;
         series4.stroke = chart.colors.getIndex(0);
         series4.tensionX = tension;
 
@@ -140,7 +140,7 @@ export default {
         series5.tooltipText = "mean: {meanValueY.value} min: {openValueY.value} max:{valueY.value}";
         series5.sequencedInterpolation = true;
         series5.fillOpacity = 0.3;
-        series5.defaultState.transitionDuration = 1000;
+        series5.defaultState.transitionDuration = 10;
         series5.tensionX = tension;
         series5.adapter.add("tooltipText", function() {
           let text = "[bold]{date}[/]\n"
@@ -157,7 +157,7 @@ export default {
         series6.dataFields.dateX = "date";
         series6.dataFields.valueY = "outdoor_min";
         series6.sequencedInterpolation = true;
-        series6.defaultState.transitionDuration = 1500;
+        series6.defaultState.transitionDuration = 10;
         series6.stroke = chart.colors.getIndex(6);
         series6.tensionX = tension;
       }

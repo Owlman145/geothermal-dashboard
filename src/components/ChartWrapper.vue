@@ -3,7 +3,7 @@
     <div class="controls">
 
     </div>
-    <div class='fan-controls'>
+    <!--div class='fan-controls'>
       <div class='fan-temps'>
         Fan Off: <input v-model.number="offTemp" type="number">
         Fan On: <input v-model.number="onTemp" type="number">
@@ -17,10 +17,10 @@
       <div v-if="fanError" class="error">
         {{ fanError }}
       </div>
-    </div>
+    </div-->
     <vue-toggle :values="scales" :selected="scale" @change="onScaleChange" default="green"></vue-toggle>
     <div class="time-select-form">
-      <DatePicker placeholder="Today" v-model="date1" @change="onTimeChange"></datepicker>
+      <DatePicker placeholder="Today" v-model="startDate" @change="onTimeChange" :disabledDate="disabledDates"></datepicker>
     </div>
     <div v-if="loading" class="loading">
       Loading...
@@ -70,9 +70,12 @@ export default {
       scales: {
         daily: "Daily",
         weekly: "Weekly",
-        monthly: "Monthly"
+        monthly: "Monthly",
+        yearly: "Yearly"
       },
-      date1: null,
+      disabledDates: (date) => {console.log(date); return date > new Date()},
+      startDate: null,
+      endDate: null
     }
   },
   computed: {
@@ -87,16 +90,16 @@ export default {
         return null
       return this.data.map(point => {
         return {
-          id: point.id,
-          date: new Date(point.id),
-          indoor_temperature: point.indoor_temperature,
-          outdoor_temperature: point.outdoor_temperature,
-          indoor_temperature_mean: point.indoor_temperature_mean,
-          outdoor_temperature_mean: point.outdoor_temperature_mean,
-          indoor_temperature_max: point.indoor_temperature_max,
-          outdoor_temperature_max: point.outdoor_temperature_max,
-          indoor_temperature_min: point.indoor_temperature_min,
-          outdoor_temperature_min: point.outdoor_temperature_min
+          id: point._id,
+          date: new Date(point.timestamp),
+          indoor_temperature: point.input_temperature,
+          outdoor_temperature: point.output_temperature,
+          indoor_temperature_mean: point.avg_input_temperature,
+          outdoor_temperature_mean: point.avg_output_temperature,
+          indoor_temperature_max: point.max_input_temperature,
+          outdoor_temperature_max: point.max_output_temperature,
+          indoor_temperature_min: point.min_input_temperature,
+          outdoor_temperature_min: point.min_output_temperature
         }
       })
     },
@@ -105,12 +108,12 @@ export default {
         return null
       return this.data.map(point => {
         return {
-          id: point.id,
-          date: new Date(point.id),
+          id: point._id,
+          date: new Date(point.timestamp),
           water_temperature: point.water_temperature,
-          water_temperature_mean: point.water_temperature_mean,
-          water_temperature_max: point.water_temperature_max,
-          water_temperature_min: point.water_temperature_min,
+          water_temperature_mean: point.avg_water_temperature,
+          water_temperature_max: point.max_water_temperature,
+          water_temperature_min: point.min_water_temperature,
         }
       })
     },
@@ -119,16 +122,12 @@ export default {
         return null
       return this.data.map(point => {
         return {
-          id: point.id,
-          date: new Date(point.id),
-          indoor_humidity: point.indoor_humidity,
-          outdoor_humidity: point.outdoor_humidity,
-          indoor_humidity_mean: point.indoor_humidity_mean,
-          outdoor_humidity_mean: point.outdoor_humidity_mean,
-          indoor_humidity_max: point.indoor_humidity_max,
-          outdoor_humidity_max: point.outdoor_humidity_max,
-          indoor_humidity_min: point.indoor_humidity_min,
-          outdoor_humidity_min: point.outdoor_humidity_min
+          id: point._id,
+          date: new Date(point.timestamp),
+          indoor_humidity: point.humidity,
+          indoor_humidity_mean: point.avg_humidity,
+          indoor_humidity_max: point.max_indoor_humidity,
+          indoor_humidity_min: point.min_indoor_humidity,
         }
       })
     }
@@ -138,8 +137,8 @@ export default {
     // already being observed
     this.loading = true
     this.fetchData()
-    this.fetchFanStatus()
-    this.fetchFanConfig()
+    //this.fetchFanStatus()
+    //this.fetchFanConfig()
   },
 
   beforeDestroy() {
@@ -151,18 +150,30 @@ export default {
     async fetchData () {
       this.error = this.data = null
       // replace `getPost` with your data fetching util / API wrapper
+      let current_date = this.startDate || new Date()
       try {
+        let startDate, endDate;
         if (this.scale === "weekly") {
-          this.data = await http.getWeekly(this.date1)
+          startDate = new Date(current_date.getTime() - 7 * 24 * 60 * 60 * 1000);
+          endDate = current_date;
+          this.data = await http.getHourlyAvg(startDate, endDate);
         } else if (this.scale === "monthly") {
-          this.data = await http.getMonthly(this.date1)
+          startDate = new Date(current_date.getTime() - 30 * 24 * 60 * 60 * 1000);
+          endDate = current_date;
+          this.data = await http.getHourlyAvg(startDate, endDate);
+        } else if (this.scale === "yearly") {
+          startDate = new Date(current_date.getTime() - 365 * 24 * 60 * 60 * 1000);
+          endDate = current_date;
+          this.data = await http.getDailyAvg(startDate, endDate);
         } else {
-          this.data = await http.getDaily(this.date1)
+          startDate = new Date(current_date.getTime() - 48 * 60 * 60 * 1000);
+          endDate = current_date;
+          this.data = await http.getData(startDate, endDate);
         }
-      } catch(err) {
-        this.error = err.toString()
+      } catch (err) {
+        this.error = err.toString();
       } finally {
-        this.loading = false
+        this.loading = false;
       }
     },
     async fetchFanStatus () {
@@ -210,6 +221,11 @@ export default {
       this.fetchData()
     },
     onTimeChange() {
+      if (new Date(this.startDate) > new Date()) {
+        this.startDate = null
+        alert("Pick a date in the past please!")
+        return
+      }
       this.loading = true
 
       this.fetchData()

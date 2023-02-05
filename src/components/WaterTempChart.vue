@@ -46,7 +46,7 @@ export default {
         chart.data = data.map(row => {
           return {
             name: row.id,
-            date: new Date(row.id),
+            date: new Date(row.date),
             temp: parseFloat(row.water_temperature)
           }
         })
@@ -65,7 +65,7 @@ export default {
       //chart.data = data || [];
 
       let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
-      dateAxis.renderer.grid.template.location = 0;
+      dateAxis.renderer.grid.template.location = 10;
 
       let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
       valueAxis.tooltip.disabled = true;
@@ -94,7 +94,7 @@ export default {
         series3.tooltipText = "mean: {meanValueY.value} min: {openValueY.value} max:{valueY.value}";
         series3.sequencedInterpolation = true;
         series3.fillOpacity = 0.3;
-        series3.defaultState.transitionDuration = 1000;
+        series3.defaultState.transitionDuration = 0;
         series3.tensionX = tension;
         series3.stroke = chart.colors.getIndex(2);
         series3.adapter.add("tooltipText", function() {
@@ -112,7 +112,7 @@ export default {
         series4.dataFields.dateX = "date";
         series4.dataFields.valueY = "temp_min";
         series4.sequencedInterpolation = true;
-        series4.defaultState.transitionDuration = 1500;
+        series4.defaultState.transitionDuration = 10;
         series4.stroke = chart.colors.getIndex(0);
         series4.tensionX = tension;
       }
