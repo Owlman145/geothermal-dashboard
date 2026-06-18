@@ -80,10 +80,10 @@ export default {
   },
   computed: {
     fanOverride: function() {
-      return this.fanConfig?.override
+      return this.fanConfig && this.fanConfig.override
     },
     fanOn: function() {
-      return this.fanActive || this.fanConfig?.override
+      return this.fanActive || (this.fanConfig && this.fanConfig.override)
     },
     temperatureData: function () {
       if (this.loading || !this.data)
