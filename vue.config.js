@@ -1,4 +1,5 @@
 module.exports = {
+  lintOnSave: false,
   chainWebpack(config) {
     config.devtool('source-map')
       .plugin('html')
