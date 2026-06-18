@@ -13,20 +13,20 @@
     "amcharts3": "github:amcharts/amcharts3",
     "axios": "^1.4.0",
     "core-js": "^3.6.5",
-    "vue": "^2.6.11",
-    "vue2-datepicker": "^3.6.1",
-    "vuejs-datepicker": "^1.6.2"
+    "vue": "^3.5.38",
+    "vue2-datepicker": "^3.0.1",
+    "vuejs-datepicker": "^0.9.29"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.4.0",
-    "@vue/cli-plugin-eslint": "~4.4.0",
-    "@vue/cli-service": "~4.4.0",
+    "@vue/cli-plugin-babel": "^5.0.9",
+    "@vue/cli-plugin-eslint": "^5.0.9",
+    "@vue/cli-service": "^5.0.9",
     "babel-eslint": "^10.1.0",
     "cross-env": "^7.0.3",
-    "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^6.2.2",
+    "eslint": "^10.5.0",
+    "eslint-plugin-vue": "^10.9.2",
     "sass": "^1.66.1",
-    "sass-loader": "^9.0.2",
+    "sass-loader": "^17.0.0",
     "vue-template-compiler": "^2.6.11"
   },
   "eslintConfig": {
@@ -47,5 +47,11 @@
     "> 1%",
     "last 2 versions",
     "not dead"
-  ]
+  ],
+  "allowScripts": {
+    "@parcel/watcher@2.5.6": true,
+    "core-js@3.49.0": true,
+    "es5-ext@0.10.64": true,
+    "yorkie@2.0.0": true
+  }
 }
