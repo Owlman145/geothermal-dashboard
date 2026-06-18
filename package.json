@@ -2,11 +2,13 @@
   "name": "geothermal-dashboard",
   "version": "0.2.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "dev": "cross-env NODE_ENV=development vue-cli-service serve --open --host localhost"
+    "serve": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "@amcharts/amcharts4": "^4.10.33",
@@ -19,16 +21,15 @@
     "vuejs-datepicker": "^0.9.29"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^5.0.9",
-    "@vue/cli-plugin-eslint": "^5.0.9",
-    "@vue/cli-service": "^5.0.9",
-    "@vue/compiler-sfc": "^3.5.38",
     "@babel/eslint-parser": "^7.22.0",
+    "@vitejs/plugin-vue": "^6.0.7",
+    "@vue/compiler-sfc": "^3.5.38",
     "cross-env": "^7.0.3",
     "eslint": "^8.50.0",
     "eslint-plugin-vue": "^10.9.2",
-    "sass": "^1.66.1",
-    "sass-loader": "^17.0.0"
+    "sass": "^1.101.0",
+    "sass-loader": "^17.0.0",
+    "vite": "^8.0.16"
   },
   "eslintConfig": {
     "root": true,
@@ -45,7 +46,14 @@
       "requireConfigFile": false,
       "babelOptions": {
         "presets": [
-          ["@babel/preset-env", { "targets": { "node": "current" } }]
+          [
+            "@babel/preset-env",
+            {
+              "targets": {
+                "node": "current"
+              }
+            }
+          ]
         ]
       }
     },
