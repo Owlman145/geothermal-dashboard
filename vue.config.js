@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   lintOnSave: true,
   chainWebpack(config) {
     config.devtool('source-map')

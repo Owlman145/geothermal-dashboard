@@ -18,6 +18,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use 'sass:color';
 $purple: #b39ae5;
 .btn {
   height: 30px;
@@ -38,23 +39,23 @@ $purple: #b39ae5;
   border-color: $purple;
   outline: none;
   &:hover {
-    background-color: darken($purple, 10%);
-    border-color: darken($purple, 10%);
+    background-color: color.adjust($purple, $lightness: -10%);
+    border-color: color.adjust($purple, $lightness: -10%);
   }
   &:active, &:focus {
-    background-color: lighten($purple, 5%);
-    border-color: lighten($purple, 5%);
+    background-color: color.adjust($purple, $lightness: 5%);
+    border-color: color.adjust($purple, $lightness: 5%);
   }
 }
 .btn.btn-default {
   &:hover {
-    background-color: darken($purple, 10%);
-    border-color: darken($purple, 10%);
+    background-color: color.adjust($purple, $lightness: -10%);
+    border-color: color.adjust($purple, $lightness: -10%);
     color: #fff;
   }
   &:active, &:focus {
-    background-color: lighten($purple, 5%);
-    border-color: lighten($purple, 5%);
+    background-color: color.adjust($purple, $lightness: 5%);
+    border-color: color.adjust($purple, $lightness: 5%);
     color: #fff;
   }
 }

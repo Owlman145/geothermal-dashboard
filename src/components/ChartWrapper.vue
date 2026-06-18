@@ -245,6 +245,7 @@ export default {
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+@use 'sass:color';
 $purple: #b39ae5;
 $fan-color: #00a8f3;
 .fan-controls {
@@ -262,8 +263,8 @@ $fan-color: #00a8f3;
       &:hover,
       &:active {
 
-        background-color: darken($purple, 10%);
-        border-color: darken($purple, 10%);
+        background-color: color.adjust($purple, $lightness: -10%);
+        border-color: color.adjust($purple, $lightness: -10%);
       }
     }
 
