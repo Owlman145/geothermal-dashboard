@@ -20,7 +20,7 @@
     </div-->
     <vue-toggle :values="scales" :selected="scale" @change="onScaleChange" default="green"></vue-toggle>
     <div class="time-select-form">
-      <DatePicker placeholder="Today" v-model="startDate" @change="onTimeChange" :disabledDate="disabledDates"></datepicker>
+      <DatePicker placeholder="Today" v-model="startDate" @change="onTimeChange" :disabled-date="disabledDates"></DatePicker>
     </div>
     <div v-if="loading" class="loading">
       Loading...
@@ -43,8 +43,8 @@ import WaterTempChart from './WaterTempChart.vue'
 import HumidityChart from './HumidityChart.vue'
 import VueToggle from './vue-toggle.vue'
 import http from "../services/http"
-import DatePicker from 'vue2-datepicker'
-import 'vue2-datepicker/index.css'
+import DatePicker from 'vue-datepicker-next'
+import 'vue-datepicker-next/index.css'
 
 export default {
   name: 'ChartWrapper',
@@ -80,10 +80,10 @@ export default {
   },
   computed: {
     fanOverride: function() {
-      return this.fanConfig?.override
+      return this.fanConfig && this.fanConfig.override
     },
     fanOn: function() {
-      return this.fanActive || this.fanConfig?.override
+      return this.fanActive || (this.fanConfig && this.fanConfig.override)
     },
     temperatureData: function () {
       if (this.loading || !this.data)
@@ -141,7 +141,7 @@ export default {
     //this.fetchFanConfig()
   },
 
-  beforeDestroy() {
+  beforeUnmount() {
     if (this.chart) {
       this.chart.dispose();
     }
