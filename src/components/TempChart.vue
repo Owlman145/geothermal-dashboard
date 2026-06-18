@@ -26,7 +26,7 @@ export default {
     this.createChart()
   },
 
-  beforeDestroy() {
+  beforeUnmount() {
     if (this.chart) {
       this.chart.dispose();
     }

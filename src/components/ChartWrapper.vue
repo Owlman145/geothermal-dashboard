@@ -141,7 +141,7 @@ export default {
     //this.fetchFanConfig()
   },
 
-  beforeDestroy() {
+  beforeUnmount() {
     if (this.chart) {
       this.chart.dispose();
     }
