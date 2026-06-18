@@ -45,7 +45,7 @@ export default {
           return {
             name: row.id,
             date: new Date(row.date),
-            input: parseFloat(row.input_humidity)
+            input: parseFloat(row.humidity)
           }
         })
       } else {
@@ -53,9 +53,9 @@ export default {
           return {
             name: row.id,
             date: new Date(row.id),
-            input_max: parseFloat(row.input_humidity_max),
-            input: parseFloat(row.input_humidity_mean),
-            input_min: parseFloat(row.input_humidity_min),
+            input_max: parseFloat(row.humidity_max),
+            input: parseFloat(row.humidity_mean),
+            input_min: parseFloat(row.humidity_min),
           }
         })
       }
@@ -92,7 +92,7 @@ export default {
         series3.tooltipText = "mean: {meanValueY.value} min: {openValueY.value} max:{valueY.value}";
         series3.sequencedInterpolation = true;
         series3.fillOpacity = 0.3;
-        series3.defaultState.transitionDuration = 1000;
+        series3.defaultState.transitionDuration = 10;
         series3.tensionX = tension;
         series3.stroke = chart.colors.getIndex(2);
         series3.adapter.add("tooltipText", function() {
@@ -110,7 +110,7 @@ export default {
         series4.dataFields.dateX = "date";
         series4.dataFields.valueY = "input_min";
         series4.sequencedInterpolation = true;
-        series4.defaultState.transitionDuration = 1500;
+        series4.defaultState.transitionDuration = 10;
         series4.stroke = chart.colors.getIndex(0);
         series4.tensionX = tension;
       }

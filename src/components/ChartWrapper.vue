@@ -124,10 +124,10 @@ export default {
         return {
           id: point._id,
           date: new Date(point.timestamp),
-          input_humidity: point.humidity,
-          input_humidity_mean: point.avg_humidity,
-          input_humidity_max: point.max_input_humidity,
-          input_humidity_min: point.min_input_humidity,
+          humidity: point.humidity,
+          humidity_mean: point.avg_humidity,
+          humidity_max: point.max_humidity,
+          humidity_min: point.min_humidity,
         }
       })
     }
