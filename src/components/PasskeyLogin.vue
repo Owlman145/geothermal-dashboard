@@ -69,11 +69,9 @@ export default {
   mounted() {
     // attempt passive/passkey-only sign-in on page load without prompting the user
     // silent=true to avoid registration prompts if server reports no passkeys
-    try {
-      this.handleAction(false, true)
-    } catch (err) {
+    this.handleAction(false, true).catch(() => {
       // ignore background init errors
-    }
+    })
   },
   methods: {
     async handleAction(requireEmail = false, silent = false) {
