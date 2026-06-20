@@ -20,7 +20,14 @@
     </div-->
     <vue-toggle :values="scales" :selected="scale" @change="onScaleChange" default="green"></vue-toggle>
     <div class="time-select-form">
-      <DatePicker placeholder="Today" v-model="startDate" @change="onTimeChange" :disabled-date="disabledDates"></DatePicker>
+      <DatePicker
+        placeholder="Today"
+        v-model:value="startDate"
+        format="YYYY-MM-DD"
+        value-type="format"
+        @change="onTimeChange"
+        :disabled-date="disabledDates"
+      ></DatePicker>
     </div>
     <div v-if="loading" class="loading">
       Loading...
@@ -73,7 +80,7 @@ export default {
         monthly: "30 Days",
         yearly: "12 Months"
       },
-      disabledDates: (date) => {console.log(date); return date > new Date()},
+      disabledDates: (date) => date > new Date(),
       startDate: null,
       endDate: null
     }
@@ -147,27 +154,59 @@ export default {
     }
   },
   methods: {
+    parseDateInput(dateValue) {
+      if (!dateValue) {
+        return null
+      }
+
+      if (dateValue instanceof Date) {
+        return Number.isNaN(dateValue.getTime()) ? null : dateValue
+      }
+
+      if (typeof dateValue === 'string') {
+        const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateValue)
+        if (match) {
+          const year = Number(match[1])
+          const month = Number(match[2])
+          const day = Number(match[3])
+          const parsed = new Date(year, month - 1, day)
+          if (
+            !Number.isNaN(parsed.getTime()) &&
+            parsed.getFullYear() === year &&
+            parsed.getMonth() === month - 1 &&
+            parsed.getDate() === day
+          ) {
+            return parsed
+          }
+          return null
+        }
+      }
+
+      const fallbackParsed = new Date(dateValue)
+      return Number.isNaN(fallbackParsed.getTime()) ? null : fallbackParsed
+    },
     async fetchData () {
       this.error = this.data = null
       // replace `getPost` with your data fetching util / API wrapper
-      let current_date = this.startDate || new Date()
+      const parsedStartDate = this.parseDateInput(this.startDate)
+      const normalizedCurrentDate = parsedStartDate || new Date()
       try {
         let startDate, endDate;
         if (this.scale === "weekly") {
-          startDate = new Date(current_date.getTime() - 7 * 24 * 60 * 60 * 1000);
-          endDate = current_date;
+          startDate = new Date(normalizedCurrentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
+          endDate = normalizedCurrentDate;
           this.data = await http.getHourlyAvg(startDate, endDate);
         } else if (this.scale === "monthly") {
-          startDate = new Date(current_date.getTime() - 30 * 24 * 60 * 60 * 1000);
-          endDate = current_date;
+          startDate = new Date(normalizedCurrentDate.getTime() - 30 * 24 * 60 * 60 * 1000);
+          endDate = normalizedCurrentDate;
           this.data = await http.getHourlyAvg(startDate, endDate);
         } else if (this.scale === "yearly") {
-          startDate = new Date(current_date.getTime() - 365 * 24 * 60 * 60 * 1000);
-          endDate = current_date;
+          startDate = new Date(normalizedCurrentDate.getTime() - 365 * 24 * 60 * 60 * 1000);
+          endDate = normalizedCurrentDate;
           this.data = await http.getDailyAvg(startDate, endDate);
         } else {
-          startDate = new Date(current_date.getTime() - 48 * 60 * 60 * 1000);
-          endDate = current_date;
+          startDate = new Date(normalizedCurrentDate.getTime() - 48 * 60 * 60 * 1000);
+          endDate = normalizedCurrentDate;
           this.data = await http.getData(startDate, endDate);
         }
       } catch (err) {
@@ -220,8 +259,16 @@ export default {
       this.loading = true
       this.fetchData()
     },
-    onTimeChange() {
-      if (new Date(this.startDate) > new Date()) {
+    onTimeChange(selectedDate) {
+      this.startDate = selectedDate || null
+
+      const parsedDate = this.parseDateInput(selectedDate)
+      if (!parsedDate) {
+        this.startDate = null
+        return
+      }
+
+      if (parsedDate > new Date()) {
         this.startDate = null
         alert("Pick a date in the past please!")
         return
