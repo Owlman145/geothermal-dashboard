@@ -12,7 +12,7 @@
     <PasskeyLogin v-else-if="!userEmail" @login-success="onLogin" />
     <ChartWrapper v-else/>
 
-    <AdminPanel v-if="authChecked && showAdmin" @close="showAdmin = false" />
+    <AdminPanel v-if="authChecked && isAdmin && showAdmin" @close="showAdmin = false" />
   </div>
 </template>
 

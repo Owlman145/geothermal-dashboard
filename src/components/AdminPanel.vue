@@ -78,9 +78,10 @@ export default {
       }
     },
     async addAdmin() {
-      if (!this.newAdmin) return
+      const email = this.newAdmin.trim()
+      if (!email) return
       try {
-        await axios.post('/auth/admins', { email: this.newAdmin }, { withCredentials: true })
+        await axios.post('/auth/admins', { email }, { withCredentials: true })
         this.newAdmin = ''
         await this.fetchAdmins()
       } catch (e) {
@@ -105,9 +106,10 @@ export default {
       }
     },
     async add() {
-      if (!this.newEmail) return
+      const email = this.newEmail.trim()
+      if (!email) return
       try {
-        await axios.post('/auth/allowed', { email: this.newEmail }, { withCredentials: true })
+        await axios.post('/auth/allowed', { email }, { withCredentials: true })
         this.newEmail = ''
         await this.fetch()
       } catch (e) {

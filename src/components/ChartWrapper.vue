@@ -164,11 +164,21 @@ export default {
       }
 
       if (typeof dateValue === 'string') {
-        const parts = dateValue.split('-').map(Number)
-        if (parts.length === 3 && parts.every(Number.isFinite)) {
-          const [year, month, day] = parts
+        const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateValue)
+        if (match) {
+          const year = Number(match[1])
+          const month = Number(match[2])
+          const day = Number(match[3])
           const parsed = new Date(year, month - 1, day)
-          return Number.isNaN(parsed.getTime()) ? null : parsed
+          if (
+            !Number.isNaN(parsed.getTime()) &&
+            parsed.getFullYear() === year &&
+            parsed.getMonth() === month - 1 &&
+            parsed.getDate() === day
+          ) {
+            return parsed
+          }
+          return null
         }
       }
 
