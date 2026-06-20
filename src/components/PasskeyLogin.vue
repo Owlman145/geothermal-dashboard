@@ -195,7 +195,7 @@ export default {
         } catch (err) {}
 
         // try conditional mediation to allow credential extensions to intercept where supported
-        console.log('Passkey create options:', pub)
+        if (import.meta.env.DEV) console.log('Passkey create options:', pub)
         let cred
         let opts = { publicKey: pub }
         if (window.PublicKeyCredential && PublicKeyCredential.getClientCapabilities) {
