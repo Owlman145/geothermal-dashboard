@@ -13,7 +13,9 @@ function bufferToBase64Url(buffer) {
 }
 
 function base64UrlToBuffer(b64u) {
-  const b64 = b64u.replace(/-/g, '+').replace(/_/g, '/') + '=='
+  let b64 = b64u.replace(/-/g, '+').replace(/_/g, '/')
+  const pad = (4 - (b64.length % 4)) % 4
+  if (pad) b64 += '='.repeat(pad)
   const str = atob(b64)
   const buf = new Uint8Array(str.length)
   for (let i = 0; i < str.length; i++) buf[i] = str.charCodeAt(i)
